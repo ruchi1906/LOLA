@@ -57,7 +57,7 @@ class Login extends Component {
                     console.log('reult' + JSON.stringify(res));
                     this.setState({loading: false});
 
-                    AsyncStorage.setItem('@UserId:key', '1');
+                    AsyncStorage.setItem('@UserId:key', res.access_token);
 
                     this
                         .props
@@ -139,6 +139,9 @@ class Login extends Component {
                                 height={50}
                                 left={25}
                                 width={'80%'}
+                                returnKeyType = "next"
+                                onSubmitEditing=
+                                {() => this.refs['password'].focus()}
                                 underlineColorAndroid={'transparent'}
                                 placeholderTextColor='#818285'
                                 placeholder="Email or Mobile Number"/>
@@ -157,6 +160,7 @@ class Login extends Component {
                                 ref="password"
                                 height={50}
                                 left={25}
+                                returnKeyType = "done"
                                 secureTextEntry={true}
                                 width={'80%'}
                                 underlineColorAndroid={'transparent'}

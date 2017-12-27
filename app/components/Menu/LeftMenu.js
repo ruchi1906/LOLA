@@ -71,7 +71,10 @@ class LeftMenu extends Component {
                 height: 50
               }}
                 onPress=
-                {()=>{ navigation.navigate('DrawerClose')}}>
+                {()=>{
+                   navigation.navigate('DrawerClose')
+                   navigation.navigate('TermsandConditions');
+                   }}>
 
                 <Text
                   style={{
@@ -87,7 +90,10 @@ class LeftMenu extends Component {
                 height: 50
               }}
                 onPress=
-                {()=>{ navigation.navigate('DrawerClose')}}>
+                {()=>{ 
+                  navigation.navigate('DrawerClose')
+                  navigation.navigate('MyProfile');
+                }}>
 
                 <Text
                   style={{
@@ -102,7 +108,9 @@ class LeftMenu extends Component {
                 height: 50
               }}
                 onPress=
-                {()=>{ navigation.navigate('DrawerClose')}}>
+                {()=>{ navigation.navigate('DrawerClose')
+                navigation.navigate('AboutLola');
+                }}>
 
                 <Text
                   style={{
@@ -117,7 +125,9 @@ class LeftMenu extends Component {
                 height: 50
               }}
                 onPress=
-                {()=>{ navigation.navigate('DrawerClose')}}>
+                {()=>{ navigation.navigate('DrawerClose')
+                navigation.navigate('ForLolaGuardian');
+                }}>
 
                 <Text
                   style={{
@@ -132,7 +142,9 @@ class LeftMenu extends Component {
                 height: 50
               }}
                 onPress=
-                {()=>{ navigation.navigate('DrawerClose')}}>
+                {()=>{ navigation.navigate('DrawerClose')
+                navigation.navigate('TermsandConditions');
+                }}>
 
                 <Text
                   style={{

@@ -89,6 +89,7 @@ const Stack = StackNavigator({
       header: null
     }
   },
+  
   Drawer: {
     screen: Drawer,
     title: Drawer,

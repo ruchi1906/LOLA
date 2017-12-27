@@ -58,23 +58,31 @@ componentDidMount(newProps){
             <View>
 
 
-<TouchableOpacity style={styles.vwContainer}>
+                    <TouchableOpacity 
+                        onPress = {()=>{this.props.navigation.navigate('NeedHelp')}}
+                        style={styles.vwContainer}>
                         <Icon style={styles.Icon} name="exclamation-circle"></Icon>
                         <Text style={styles.txtlbl}>I Need Help</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.vwContainer}>
+                    <TouchableOpacity 
+                             onPress = {()=>{this.props.navigation.navigate('AskLola')}}
+                            style={styles.vwContainer}>
                         <Icon style={styles.Icon} name="question-circle"></Icon>
                         <Text style={styles.txtlbl}>Ask Lola</Text>
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={styles.vwContainer}>
+                    <TouchableOpacity 
+                         onPress = {()=>{this.props.navigation.navigate('MyLola')}}
+                        style={styles.vwContainer}>
                         <Icon style={styles.Icon} name="female"></Icon>
                         <Text style={styles.txtlbl}>My Lola</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.vwContainer}>
+                    <TouchableOpacity 
+                         onPress = {()=>{this.props.navigation.navigate('PlayNow')}}
+                        style={styles.vwContainer}>
                         <Icon style={styles.Icon} name="play-circle"></Icon>
                         <Text style={styles.txtlbl}>Play Now</Text>
                     </TouchableOpacity>
@@ -83,22 +91,30 @@ componentDidMount(newProps){
             
             :            <View>
 
-                    <TouchableOpacity style={styles.vwContainer}>
+                    <TouchableOpacity 
+                          onPress = {()=>{this.props.navigation.navigate('NeedHelp')}}                          
+                        style={styles.vwContainer}>
                         <Icon style={styles.Icon} name="exclamation-circle"></Icon>
                         <Text style={styles.txtlbl}>I Need Help</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.vwContainer}>
+                    <TouchableOpacity 
+                          onPress = {()=>{this.props.navigation.navigate('AskLola')}}
+                        style={styles.vwContainer}>
                         <Icon style={styles.Icon} name="question-circle"></Icon>
                         <Text style={styles.txtlbl}>Ask Lola</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.vwContainer}>
+                    <TouchableOpacity
+                         onPress = {()=>{this.props.navigation.navigate('AboutLola')}}
+                        style={styles.vwContainer}>
                         <Icon style={styles.Icon} name="info-circle"></Icon>
                         <Text style={styles.txtlbl}>About Lola</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.vwContainer}>
+                    <TouchableOpacity 
+                        onPress = {()=>{this.props.navigation.navigate('ForLolaGuardian')}}
+                        style={styles.vwContainer}>
                         <Icon style={styles.Icon} name="female"></Icon>
                         <Text style={styles.txtlbl}>{"For Lola's Guardian"}</Text>
                     </TouchableOpacity>

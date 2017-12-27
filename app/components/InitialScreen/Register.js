@@ -293,6 +293,8 @@ class Register extends Component {
                 left={25}
                 width={'100%'}
                 returnKeyType = "next"
+                onSubmitEditing=
+                {() => this.refs['lastname'].focus()}
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
                 placeholder="First Name"/>
@@ -311,6 +313,8 @@ class Register extends Component {
                 left={25}
                 width={'100%'}
                 returnKeyType = "next"
+                onSubmitEditing=
+                {() => this.refs['mobile_No'].focus()}
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
                 placeholder="Last Name"/>
@@ -330,6 +334,8 @@ class Register extends Component {
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
                 returnKeyType = "next"
+                onSubmitEditing=
+                {() => this.refs['email'].focus()}
                 keyboardType='phone-pad'
                 placeholder="Phone Number"/>
               <View style ={styles.borderBg}></View>
@@ -346,6 +352,8 @@ class Register extends Component {
                 left={25}
                 width={'100%'}
                 returnKeyType = "next"
+                onSubmitEditing=
+                {() => this.refs['Password'].focus()}
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
                 keyboardType='email-address'
