@@ -23,6 +23,7 @@ export default class ForgotPassword extends Component {
 
         this.state = {
             email : '',
+            loading : false
         }
     }
 
@@ -31,7 +32,33 @@ export default class ForgotPassword extends Component {
         if (this.state.email === '') {
             Alert.alert('Enter a valid mail or number');
          }else{
-            Alert.alert('Mail sent');
+                this.setState({loading:true});
+            const url = 'http://lets-dev-api-002.azurewebsites.net/api/Users/ForgotPassword';
+            
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                                body: JSON.stringify({                                  
+                                  "emailAddress": this.state.email,                 
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(res => {
+            
+                                Alert.alert(res.message);
+                                this.setState({loading:false});
+            
+                                // AsyncStorage.setItem('@UserId:key', res.cusId);
+                            })
+                            .catch(error => {
+                                this.setState({loading: false});
+                                console.log('error:' + (error));
+            
+                            });
+           
          }
 
     }

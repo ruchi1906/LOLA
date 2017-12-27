@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
   Titlecontainer: {
     width: '70%',
-   // marginLeft: '15%',
+    marginLeft: '15%',
     alignItems: 'center'
   },
   Backcontainer: {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   }
 });
 
-class Header extends Component {
+class DrawerHeader extends Component {
 
   constructor(props) {
     super(props);
@@ -52,22 +52,21 @@ class Header extends Component {
 
   render() {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.Backcontainer} onPress={this.props.back}>
-        <Icon name="chevron-left" style={styles.TxtIP} color="#818285"/>
-      </TouchableOpacity>
+    <View style={styles.container}>    
       <View style={styles.Titlecontainer}>
         <Text style={styles.text}>
           {this.props.title}
-        </Text>
-        
-      </View>     
+        </Text>       
+      </View>  
+      <TouchableOpacity style={styles.Backcontainer} onPress={this.props.back}>
+        <Icon name="align-right" style={styles.TxtIP} color="#818285"/>
+        </TouchableOpacity>   
     </View>
   );
 }
 }
 
 
-export default (Header);
+export default (DrawerHeader);
 
 

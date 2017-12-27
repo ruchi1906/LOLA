@@ -9,7 +9,8 @@
   "dependencies": {
     "react": "16.0.0",
     "react-native": "0.51.0",
-    "react-native-checkbox": "^2.0.0"
+    "react-native-checkbox": "^2.0.0",
+    "react-native-material-dropdown": "^0.6.1"
   },
   "devDependencies": {
     "babel-jest": "22.0.3",

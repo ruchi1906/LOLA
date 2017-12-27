@@ -6,7 +6,8 @@ import {
   Text,
   TextInput,
   ActivityIndicator,
-  View,Alert,
+  View,
+  Alert,
   Image,
   TouchableOpacity
 } from 'react-native';
@@ -15,8 +16,13 @@ import styles from '../../styles/Registerstyles';
 import Header from '../../common/header';
 import CheckBox from 'react-native-checkbox';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import {Picker} from 'react-native-picker-dropdown';
+import {UserData} from '../../redux/actions/UserData_action';
+import {NavigationActions} from 'react-navigation';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
-export default class Register extends Component {
+class Register extends Component {
   constructor(props) {
     super(props);
     this.registerCall = this
@@ -35,22 +41,103 @@ export default class Register extends Component {
       loading: false,
       Language: '',
       Birthdate: 'Birth Date',
-      login1: {}
+      login1: {},
+      genderList: [],
+      LanguageList: []
     }
   }
 
+  componentDidMount() {
+    this.getGender();
+    this.getLanguage();
+  }
+
   _showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
-  
+
   _hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
 
+  getAge(birthDateString) {
+    var today = new Date();
+    var birthDate = new Date(birthDateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
   _handleDatePicked = (date) => {
-    
-            this._hideDateTimePicker();
-            let formattedDate = new Date(date).toLocaleDateString();
-            // console.log(fordat + 'A date has been picked: ', + formattedDate );
-            this.setState({Birthdate: formattedDate});
-        };
-  
+
+    this._hideDateTimePicker();
+    //  let formattedDate = new Date(date).toLocaleDateString();
+    let birthdate = (date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+
+    if (this.getAge(date) < 13) {
+      Alert.alert("Age limit is 13");
+    } else {
+      this.setState({Birthdate: birthdate});
+    }
+
+  };
+
+  getGender() {
+
+    const url = 'http://lets-dev-api-002.azurewebsites.net/api/MasterData/GetGenders';
+    this.setState({loading: true});
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+        body: JSON.stringify({"searchFilter": ""})
+      })
+      .then(response => response.json())
+      .then(res => {
+        console.log(JSON.stringify(res));
+        this.setState({genderList: res});
+      })
+      .catch(error => {
+        // this.setState({loading: false});
+        console.log('error:' + (error));
+
+      });
+
+  }
+
+  getLanguage() {
+
+    const url = 'http://lets-dev-api-002.azurewebsites.net/api/MasterData/GetLanguages';
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+        body: JSON.stringify({"searchFilter": ""})
+      })
+      .then(response => response.json())
+      .then(res => {
+        console.log(JSON.stringify(res));
+        this.setState({
+          LanguageList: res,
+          loading: false
+        });
+      })
+      .catch(error => {
+         this.setState({loading: false});
+        console.log('error:' + (error));
+
+      });
+
+  }
+
+  updateGender = (gender) => {
+    this.setState({gender: gender})
+  }
+
   registerCall() {
     console.log('inside registerCall call' + JSON.stringify(this.state));
     if (!validators.RegularExpressionName(this.state.firstname)) {
@@ -75,9 +162,9 @@ export default class Register extends Component {
       Alert.alert("Your password should contain \n Minimum 7 characters including atleast 1 number");
       this
         .refs
-        .password
+        .Password
         .focus();
-    } else if (!(this.state.gender === 0 || this.state.gender === 1)) {
+    } else if ((this.state.gender === '')) {
       Alert.alert('Please selest Gender');
     } else if (!validators.RegularExpressionMobileNumber(this.state.mobile_No)) {
       Alert.alert('Please enter valid Phone Number');
@@ -87,7 +174,7 @@ export default class Register extends Component {
         .focus();
     } else if (this.state.terms_condition === false) {
       Alert.alert('Please select Terms and condition first');
-    } else if (this.state.Birthdate === 'Birth Date' ) {
+    } else if (this.state.Birthdate === 'Birth Date') {
       Alert.alert('Please enter language');
     } else if (this.state.Language === '') {
       Alert.alert('Please enter language');
@@ -105,6 +192,62 @@ export default class Register extends Component {
         Language: this.state.Language
 
       };
+
+      console.log(JSON.stringify(user));
+
+      const url = 'http://lets-dev-api-002.azurewebsites.net/api/LolaUsers/RegisterUser';
+      this.setState({loading: true});
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+          body: JSON.stringify({
+            "firstName": this.state.firstname,
+            "surname": this.state.lastname,
+            "cellPhone": this.state.mobile_No,
+            "emailAddress": this.state.email,
+            "birthDate": this.state.Birthdate,
+            "genderID": this.state.gender,
+            "languageID": this.state.Language,
+            "isAcceptTC": this.state.terms_condition,
+            "password": this.state.password
+          })
+        })
+        .then(response => response.json())
+        .then(res => {
+
+          console.log('reult' + JSON.stringify(res));
+
+          if (res.message !== undefined) {
+            Alert.alert(res.message);
+          } else {
+           
+            AsyncStorage.setItem('@userID:key', res.userID);
+            this.props.UserData('1');
+            Alert.alert('Registration Successfully');
+            this
+            .props
+            .navigation
+            .dispatch(NavigationActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({
+                        routeName: 'Drawer',
+                         
+                    })]
+            }));
+          }
+
+          this.setState({loading: false});
+
+        })
+        .catch(error => {
+          this.setState({loading: false});
+          console.log('error:' + (error));
+
+        });
+
       console.log('hi');
 
     }
@@ -125,6 +268,12 @@ export default class Register extends Component {
             .goBack(null)
         }}/>
 
+                  <ActivityIndicator
+                                ref='loader'
+                                animating={this.state.loading}
+                                style={{position : 'absolute',alignSelf : 'center',justifyContent :'center',marginTop : '40%',zIndex : 10}}
+                                size="large"/>
+
         <ScrollView contentContainerStyle={{
           width: window.width
         }}>
@@ -143,6 +292,7 @@ export default class Register extends Component {
                 height={50}
                 left={25}
                 width={'100%'}
+                returnKeyType = "next"
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
                 placeholder="First Name"/>
@@ -160,6 +310,7 @@ export default class Register extends Component {
                 height={50}
                 left={25}
                 width={'100%'}
+                returnKeyType = "next"
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
                 placeholder="Last Name"/>
@@ -178,6 +329,7 @@ export default class Register extends Component {
                 width={'100%'}
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
+                returnKeyType = "next"
                 keyboardType='phone-pad'
                 placeholder="Phone Number"/>
               <View style ={styles.borderBg}></View>
@@ -193,6 +345,7 @@ export default class Register extends Component {
                 height={50}
                 left={25}
                 width={'100%'}
+                returnKeyType = "next"
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
                 keyboardType='email-address'
@@ -211,14 +364,26 @@ export default class Register extends Component {
                 left={25}
                 width={'100%'}
                 secureTextEntry={true}
+                returnKeyType = "next"
                 underlineColorAndroid={'transparent'}
                 placeholderTextColor='#818285'
                 placeholder="Password"/>
               <View style ={styles.borderBg}></View>
             </View>
-          
-            <TouchableOpacity style={{height : 50,marginTop : 15}} onPress={this._showDateTimePicker}>
-              <Text style={{marginLeft : 25,color : '#818285',fontSize : 20,marginBottom : 10,}}>{this.state.Birthdate}</Text>
+
+            <TouchableOpacity
+              style={{
+              height: 50,
+              marginTop: 15
+            }}
+              onPress={this._showDateTimePicker}>
+              <Text
+                style={{
+                marginLeft: 25,
+                color: '#818285',
+                fontSize: 20,
+                marginBottom: 10
+              }}>{this.state.Birthdate}</Text>
               <View style ={styles.borderBg}></View>
             </TouchableOpacity>
             <DateTimePicker
@@ -226,37 +391,95 @@ export default class Register extends Component {
               onConfirm={this._handleDatePicked}
               onCancel={this._hideDateTimePicker}/>
 
-            <View style={{
-              alignItems: 'center'
+            <View
+              style={{
+              alignItems: 'center',
+              flex: 1,
+              width: '100%'
             }}>
-              <TextInput
-                ref="Gender"
-                onChangeText={(text) => this.setState({gender: text})}
-                style={styles.TxtIP}
-                height={50}
-                left={25}
-                width={'100%'}
-                underlineColorAndroid={'transparent'}
-                placeholderTextColor='#818285'
-                placeholder="Gender"/>
+
+              {this.state.genderList.length !== 0
+                ? <View
+                    style={{
+                    backgroundColor: 'white',
+                    alignSelf: 'stretch',
+                    margin: 20
+                  }}>
+                    <Picker
+                      selectedValue={this.state.gender}
+                      onValueChange={(gender) => {
+                      console.log(gender);
+                      this.setState({gender})
+                    }}
+                      mode="dropdown"
+                      style={{
+                      alignSelf: 'stretch',
+                      color: 'black',
+                      //fontSize: 15
+                    }}>
+                      {this
+                        .state
+                        .genderList
+                        .map(function (item, i) {
+                          return (<Picker.Item
+                            key={i}
+                            style={styles.TxtIP}
+                            label={item.description}
+                            value={item.genderID}/>);
+                        })
+}
+
+                    </Picker>
+                  </View>
+
+                : null
+}
+
               <View style ={styles.borderBg}></View>
             </View>
 
             <View style={{
               alignItems: 'center'
             }}>
-              <TextInput
-                ref="Language"
-                onChangeText={(text) => this.setState({Language: text})}
-                style={styles.TxtIP}
-                height={50}
-                left={25}
-                width={'100%'}
-                underlineColorAndroid={'transparent'}
-                placeholderTextColor='#818285'
-                placeholder="Language"/>
+              {this.state.LanguageList.length !== 0
+                ? <View
+                    style={{
+                    backgroundColor: 'white',
+                    alignSelf: 'stretch',
+                    margin: 20
+                  }}>
+                    <Picker
+                      selectedValue={this.state.Language}
+                      onValueChange={(Language) => {
+                      console.log(Language);
+                      this.setState({Language})
+                    }}
+                      mode="dropdown"
+                      style={{
+                      alignSelf: 'stretch',
+                      color: 'black',
+                     // fontSize: 15
+                    }}>
+                      {this
+                        .state
+                        .LanguageList
+                        .map(function (item, i) {
+                          return (<Picker.Item
+                            key={i}
+                            style={styles.TxtIP}
+                            label={item.description}
+                            value={item.languageID}/>);
+                        })
+}
+
+                    </Picker>
+                  </View>
+
+                : null
+}
               <View style ={styles.borderBg}></View>
             </View>
+
           </View>
 
           <View
@@ -271,12 +494,12 @@ export default class Register extends Component {
               label=''
               checked={this.state.terms_condition}
               onChange={(checked) => {
-                if(this.state.terms_condition === false){
-                  this.setState({terms_condition : true})
-                }else{
-                  this.setState({terms_condition : false})
-                }
-              }}/>
+              if (this.state.terms_condition === false) {
+                this.setState({terms_condition: true})
+              } else {
+                this.setState({terms_condition: false})
+              }
+            }}/>
 
             <Text
               style={{
@@ -305,3 +528,14 @@ export default class Register extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  // console.log('state:' + JSON.stringify(state));
+  return {}
+}
+
+const mapDispatchToProps = dispatch => (bindActionCreators({
+  UserData
+}, dispatch));
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
