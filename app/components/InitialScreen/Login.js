@@ -34,7 +34,7 @@ class Login extends Component {
         }
     }
     loginCall() {
-       // this.setState({loading: true});
+        // this.setState({loading: true});
         if (this.state.email === '') {
             Alert.alert('Enter a valid mail or number');
         } else if (this.state.password === undefined || this.state.password === '') { //(!validators.RegularExpressionPassword(this.state.password))) {
@@ -54,22 +54,27 @@ class Login extends Component {
                 .then(response => response.json())
                 .then(res => {
 
-                    console.log('reult' + JSON.stringify(res));
+                    //console.log('reult' + JSON.stringify(res));
                     this.setState({loading: false});
+                    if (res.message === undefined) {
 
-                    AsyncStorage.setItem('@UserId:key', res.access_token);
+                        AsyncStorage.setItem('@UserId:key', res.access_token);
+                        this
+                            .props
+                            .UserData(res.access_token);
 
-                    this
-                        .props
-                        .UserData('1');
+                        this
+                            .props
+                            .navigation
+                            .dispatch(NavigationActions.reset({
+                                index: 0,
+                                actions: [NavigationActions.navigate({routeName: 'Drawer'})]
+                            }));
 
-                    this
-                        .props
-                        .navigation
-                        .dispatch(NavigationActions.reset({
-                            index: 0,
-                            actions: [NavigationActions.navigate({routeName: 'Drawer'})]
-                        }));
+                    } else {
+                        Alert.alert(res.message);
+                    }
+
                 })
                 .catch(error => {
                     this.setState({loading: false});
@@ -111,7 +116,7 @@ class Login extends Component {
                     alignSelf: 'center',
                     justifyContent: 'center',
                     marginTop: '60%',
-                    zIndex : 10
+                    zIndex: 10
                 }}
                     size="large"/>
 
@@ -139,7 +144,7 @@ class Login extends Component {
                                 height={50}
                                 left={25}
                                 width={'80%'}
-                                returnKeyType = "next"
+                                returnKeyType="next"
                                 onSubmitEditing=
                                 {() => this.refs['password'].focus()}
                                 underlineColorAndroid={'transparent'}
@@ -160,7 +165,7 @@ class Login extends Component {
                                 ref="password"
                                 height={50}
                                 left={25}
-                                returnKeyType = "done"
+                                returnKeyType="done"
                                 secureTextEntry={true}
                                 width={'80%'}
                                 underlineColorAndroid={'transparent'}

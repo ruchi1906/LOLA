@@ -13,23 +13,19 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InnerHeader from '../../common/innerHeader';
-import styles from '../../styles/Homestyles';
+import styles from '../../styles/AboutLolastyles';
 
 class TermsandConditions extends Component {
     constructor(props) {
         super(props);
         console.log(JSON.stringify(props));
-        this.state = {
-          
-        }
+        this.state = {}
     }
 
-componentDidMount(newProps){
-  
-}
+    componentDidMount(newProps) {}
 
     render() {
-         return (
+        return (
 
             <View style={{
                 flex: 1
@@ -38,11 +34,11 @@ componentDidMount(newProps){
                 <InnerHeader
                     title={'TERMS & CONDITIONS'}
                     barIcon={() => {
-                        this
+                    this
                         .props
                         .navigation
                         .navigate("DrawerOpen")
-                    }}
+                }}
                     back={() => {
                     this
                         .props
@@ -50,13 +46,37 @@ componentDidMount(newProps){
                         .goBack(null)
                 }}/>
 
-               
+                <ScrollView
+                    contentContainerStyle={{
+                    width: window.width
+                }}>
+
+                    <View style={styles.NeedHelpbar}>
+                        <Text style={styles.txtNeedHelp}>{"TERMS & CONDITIONS"}</Text>
+                    </View>
+
+                    <View style={styles.ContainerBg}>
+
+                        <Text style={styles.txtEmergency}>{"TERMS & CONDITIONS"}
+                        </Text>
+
+                        <Text
+                            style={{
+                            marginLeft: 20,
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            marginTop: 20,
+                            marginBottom: 20
+                        }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry</Text>
+
+                    </View>
+
+                </ScrollView>
 
             </View>
 
         );
     }
 }
-
 
 export default TermsandConditions;

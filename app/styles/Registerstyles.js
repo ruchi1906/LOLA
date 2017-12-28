@@ -16,6 +16,7 @@ export default StyleSheet.create({
         alignSelf: 'center',
         borderColor: "#EBEEF0",
         borderWidth: 1,
+        marginTop : 20,
         backgroundColor: '#ffffff',
         width: '90%'
     },

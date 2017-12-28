@@ -34,12 +34,12 @@ class LeftMenu extends Component {
     AsyncStorage.setItem('@UserId:key', '0');   
     this.props.UserData(0);
 
-    AsyncStorage
-    .getItem("@UserId:key")
-    .then((value) => {
-      console.log('came here' + value);
-    })
-    .done();
+    // AsyncStorage
+    // .getItem("@UserId:key")
+    // .then((value) => {
+    //   console.log('came here' + value);
+    // })
+    // .done();
 
 
     this
@@ -181,7 +181,7 @@ class LeftMenu extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('In Menu:' + JSON.stringify(state));
+ // console.log('In Menu:' + JSON.stringify(state));
   return {userId: state.UserData_red.UserId}
 }
 
