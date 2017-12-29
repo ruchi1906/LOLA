@@ -15,29 +15,56 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import InnerHeader from '../../common/innerHeader';
 import styles from '../../styles/NeedHelpstyles';
 import Communications from 'react-native-communications';
+import Loader from '../../common/Loader';
 
 class NeedHelp extends Component {
     constructor(props) {
         super(props);
         console.log(JSON.stringify(props));
         this.state = {
-            json: [
-                {
-                    title: 'Ambulance Service',
-                    No: '022 155 15865'
-                }, {
-                    title: 'Police Station',
-                    No: '022 155 15865'
-                }, {
-                    title: 'Fire Bridage',
-                    No: '022 155 15865'
-                }
-            ]
+            json: [],
+            loading : false,
 
         }
     }
 
-    componentDidMount(newProps) {}
+    componentDidMount(newProps) {
+        this.getNeedHelp();
+
+    }
+
+    getNeedHelp = () =>{
+        this.setState({loading: true});
+
+        const url = 'http://lets-dev-api-002.azurewebsites.net/api/Lola/GetINeedHelp';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+                body: JSON.stringify({
+                    "latitude": 0,
+                    "longitude": 0,
+                    "userID": ""
+                    })
+            })
+            .then(response => response.json())
+            .then(res => {
+
+                console.log(JSON.stringify(res));
+
+                this.setState({
+                    json: res,
+                    loading: false,
+                });
+            })
+            .catch(error => {
+                console.log('error:' + (error));
+                this.setState({error, loading: false});
+            });
+    }
 
     render() {
         return (
@@ -45,6 +72,11 @@ class NeedHelp extends Component {
             <View style={{
                 flex: 1
             }}>
+
+                <Loader
+                            visible = {this.state.loading}
+                            top = {40}
+                            />
 
                 <InnerHeader
                     title={'I NEED HELP'}
@@ -87,13 +119,13 @@ class NeedHelp extends Component {
                                             style={{
                                             width: '70%'
                                         }}>
-                                            <Text style={styles.txtService}>{item.title}</Text>
-                                            <Text style={styles.txtService}>{item.No}</Text>
+                                            <Text style={styles.txtService}>{item.knownAs}</Text>
+                                            <Text style={styles.txtService}>{item.phoneNumber}</Text>
                                         </View>
 
                                         <TouchableOpacity
                                             onPress=
-                                            {()=>{ Communications.phonecall(item.No, true); }}
+                                            {()=>{ Communications.phonecall(item.phoneNumber, true); }}
                                             style={{
                                             width: '30%'
                                         }}>

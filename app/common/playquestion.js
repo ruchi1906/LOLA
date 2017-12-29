@@ -12,10 +12,10 @@ import {
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import InnerHeader from '../../common/innerHeader';
+import InnerHeader from './innerHeader';
 import styles from '../../styles/PlayNowStyles';
 
-class PlayNow extends Component {
+class Playquestion extends Component {
     constructor(props) {
         super(props);
         console.log(JSON.stringify(props));
@@ -123,4 +123,4 @@ class PlayNow extends Component {
     }
 }
 
-export default PlayNow;
+export default Playquestion;

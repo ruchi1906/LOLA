@@ -14,15 +14,38 @@ import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InnerHeader from '../../common/innerHeader';
 import styles from '../../styles/AboutLolastyles';
+import Loader from '../../common/Loader';
 
 class ForLolaGuardian extends Component {
     constructor(props) {
         super(props);
         console.log(JSON.stringify(props));
-        this.state = {}
+        this.state = {
+            loading: false,
+            data: ''
+        }
     }
 
-    componentDidMount(newProps) {}
+    componentDidMount(newProps) {
+        this.getForLolaGuardian();
+    }
+
+    getForLolaGuardian = () => {
+        const url = `http://lets-dev-api-002.azurewebsites.net/api/Lola/GetContentGuardian`;
+        console.log(url);
+        this.setState({loading: true});
+
+        fetch(url)
+            .then(response => response.json())
+            .then(res => {
+
+                this.setState({data: res.description, loading: false});
+            })
+            .catch(error => {
+                console.log('error:' + (error));
+                this.setState({error, loading: false});
+            });
+    }
 
     render() {
         return (
@@ -30,6 +53,8 @@ class ForLolaGuardian extends Component {
             <View style={{
                 flex: 1
             }}>
+
+                <Loader visible={this.state.loading} top={40}/>
 
                 <InnerHeader
                     title={"FOR LOLA'S GUARDIAN"}
@@ -67,7 +92,7 @@ class ForLolaGuardian extends Component {
                             justifyContent: 'center',
                             marginTop: 20,
                             marginBottom: 20
-                        }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry</Text>
+                        }}>{this.state.data}</Text>
 
                     </View>
 
